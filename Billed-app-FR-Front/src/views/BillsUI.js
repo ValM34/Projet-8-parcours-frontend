@@ -19,6 +19,15 @@ const row = (bill) => {
     `)
   }
 
+export const sortDate = (data, antiChrono = true) => {
+  if(data){
+    if(antiChrono){
+      return data.sort((a, b) => new Date(b.date) - new Date(a.date));
+    }
+    return data.sort((a, b) => new Date(a.date) - new Date(b.date));
+  }
+}
+
 const rows = (data) => {
   return (data && data.length) ? data.map(bill => row(bill)).join("") : ""
 }
@@ -69,7 +78,7 @@ export default ({ data: bills, loading, error }) => {
               </tr>
           </thead>
           <tbody data-testid="tbody">
-            ${rows(bills)}
+            ${rows(sortDate(bills))}
           </tbody>
           </table>
         </div>
