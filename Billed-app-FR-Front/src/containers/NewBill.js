@@ -25,7 +25,9 @@ export default class NewBill {
     formData.append('file', file)
     formData.append('email', email)
 
-    this.store
+    if(file.type === "image/png" || file.type === "image/jpeg" || file.type === "image/jpg") {
+      console.log('format correct');
+      this.store
       .bills()
       .create({
         data: formData,
@@ -39,9 +41,27 @@ export default class NewBill {
         this.fileUrl = fileUrl
         this.fileName = fileName
       }).catch(error => console.error(error))
+    } else {
+      if(this.document.querySelector("#image_file_error_alert")) {
+        return;
+      }
+      const fileUploaderContainer = this.document.querySelector("#new_bill_upload_image");
+      const newDivErrorMsg = document.createElement('div');
+      newDivErrorMsg.classList.add('alert', 'alert-danger');
+      newDivErrorMsg.setAttribute('id', 'image_file_error_alert');
+      newDivErrorMsg.textContent = "Format d'image invalide. Types acceptés: png, jpeg, jpg.";
+      fileUploaderContainer.appendChild(newDivErrorMsg);
+    }
   }
   handleSubmit = e => {
     e.preventDefault()
+
+    // Verify if filetype is png, jpeg or jpg
+    const file = this.document.querySelector(`input[data-testid="file"]`).files[0]
+    if(file.type !== "image/png" || file.type !== "image/jpeg" || file.type !== "image/jpg"){
+      return;
+    }
+
     console.log('e.target.querySelector(`input[data-testid="datepicker"]`).value', e.target.querySelector(`input[data-testid="datepicker"]`).value)
     const email = JSON.parse(localStorage.getItem("user")).email
     const bill = {

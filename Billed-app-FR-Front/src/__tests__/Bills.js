@@ -3,7 +3,7 @@
  */
 
 import {screen, waitFor} from "@testing-library/dom"
-import BillsUI from "../views/BillsUI.js"
+import BillsUI, { sortDate } from "../views/BillsUI.js"
 import { bills } from "../fixtures/bills.js"
 import { ROUTES_PATH} from "../constants/routes.js";
 import {localStorageMock} from "../__mocks__/localStorage.js";
@@ -34,6 +34,18 @@ describe("Given I am connected as an employee", () => {
       const antiChrono = (a, b) => ((a < b) ? 1 : -1)
       const datesSorted = [...dates].sort(antiChrono)
       expect(dates).toEqual(datesSorted)
+    })
+    test("Test sortDate", () => {
+      // Extract datesList of fixtures
+      const antiChrono = (a, b) => ((a < b) ? 1 : -1);
+      const datesList = [...bills].map(bill => bill.date);
+      const datesSorted = [...datesList].sort(antiChrono);
+      // Extract datesList from bills with sortDate
+      const datesExtraitesDeLaListDesBills = sortDate([...bills]).map(bill => bill.date);
+      // Test sortDate
+      expect(datesExtraitesDeLaListDesBills).toEqual(datesSorted);
+      // Test sortDate failure
+      expect(datesExtraitesDeLaListDesBills).not.toEqual([ '2003-03-03', '2004-04-04', '2002-02-02', '2001-01-01' ]);
     })
   })
 })
